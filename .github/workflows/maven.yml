@@ -30,7 +30,7 @@ jobs:
     - name: Compile with Maven
       run: mvn compile
     - name: Test 
-      run: mvn quarkus:test
+      run: mvn test
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
