@@ -37,7 +37,7 @@ import io.quarkus.kafka.client.serialization.ObjectMapperDeserializer;
 import java.util.stream.IntStream;
 
 @QuarkusTest
-@QuarkusTestResource(TestKafkaResource.class)
+@QuarkusTestResource(TestResource.class)
 public class TestAgeRestriction {
 
     private static final Logger logger = Logger.getLogger(AgeRestrict.class);
