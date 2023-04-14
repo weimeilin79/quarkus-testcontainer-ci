@@ -34,9 +34,10 @@ import io.quarkus.kafka.client.serialization.ObjectMapperSerializer;
 import io.quarkus.kafka.client.serialization.ObjectMapperDeserializer;
 
 
+import java.util.stream.IntStream;
 
 @QuarkusTest
-@QuarkusTestResource(TestResource.class)
+@QuarkusTestResource(TestKafkaResource.class)
 public class TestAgeRestriction {
 
     private static final Logger logger = Logger.getLogger(AgeRestrict.class);
@@ -51,6 +52,9 @@ public class TestAgeRestriction {
         Producer<Integer, Customer> producer = createCustomerProducer("customers");
         
         logger.info("Sending customer records");
+        
+       
+            
         
         
         producer.send(new ProducerRecord<>("customers", 101, new Customer(101, "Abby", 17)));
@@ -72,6 +76,15 @@ public class TestAgeRestriction {
         records.forEach((record) -> logger.info("--->"+record.value()));
 
         assertEquals(8, records.size());
+
+        IntStream.range(0, 2).forEach(
+                i -> {
+                    try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+                    logger.info(".");
+       
+                }
+            );
+        
 
         Consumer<Integer, Customer> underage_consumer = createConsumer("underage");
         logger.info("Consuming underage  customer records.....");
