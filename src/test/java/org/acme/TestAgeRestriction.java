@@ -54,7 +54,13 @@ public class TestAgeRestriction {
         logger.info("Sending customer records");
         
        
-            
+        IntStream.range(0, 3).forEach(
+            i -> {
+                try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+                logger.info(".");
+   
+            }
+        );     
         
         
         producer.send(new ProducerRecord<>("customers", 101, new Customer(101, "Abby", 17)));
@@ -65,7 +71,6 @@ public class TestAgeRestriction {
         producer.send(new ProducerRecord<>("customers", 102, new Customer(606, "Fiona", 22)));
         producer.send(new ProducerRecord<>("customers", 103, new Customer(707, "Gabby", 33)));
         producer.send(new ProducerRecord<>("customers", 104, new Customer(808, "Hannah", 29)));
-       
         
         Consumer<Integer, Customer> customer_consumer = createConsumer("customers");
 
@@ -77,14 +82,6 @@ public class TestAgeRestriction {
 
         assertEquals(8, records.size());
 
-        IntStream.range(0, 2).forEach(
-                i -> {
-                    try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
-                    logger.info(".");
-       
-                }
-            );
-        
 
         Consumer<Integer, Customer> underage_consumer = createConsumer("underage");
         logger.info("Consuming underage  customer records.....");
