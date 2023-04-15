@@ -19,7 +19,10 @@ public class TestResource implements QuarkusTestResourceLifecycleManager {
             command = command + "--advertise-kafka-addr PLAINTEXT://127.0.0.1:29092,OUTSIDE://" + this.getHost() + ":" + this.getMappedPort(9092);
             this.copyFileToContainer(Transferable.of(command, 511), "/testcontainers_start.sh");
         }
-    };
+    }.withCreateContainerCmdModifier(cmd -> {
+        cmd.getHostConfig()
+          .withCpuCount(2l);
+    });
 
 
     
