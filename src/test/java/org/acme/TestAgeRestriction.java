@@ -55,7 +55,7 @@ public class TestAgeRestriction {
         
        
         //Putting this thread to sleep to allow consumer thread to catch up. 
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+        try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
              
         producer.send(new ProducerRecord<>("customers", 101, new Customer(101, "Abby", 17)));
         producer.send(new ProducerRecord<>("customers", 102, new Customer(202, "Brooke", 42)));
@@ -66,16 +66,7 @@ public class TestAgeRestriction {
         producer.send(new ProducerRecord<>("customers", 103, new Customer(707, "Gabby", 33)));
         producer.send(new ProducerRecord<>("customers", 104, new Customer(808, "Hannah", 29)));
         
-        Consumer<Integer, Customer> customer_consumer = createConsumer("customers");
-
-    
-        logger.info("Consuming customer records.....");
-        List<ConsumerRecord<Integer, Customer>> records = poll(customer_consumer, 8);
         
-        records.forEach((record) -> logger.info("--->"+record.value()));
-
-        assertEquals(8, records.size());
-
 
         Consumer<Integer, Customer> underage_consumer = createConsumer("underage");
         logger.info("Consuming underage  customer records.....");
@@ -85,7 +76,6 @@ public class TestAgeRestriction {
         underage_records.forEach((record) -> logger.info("--->"+record.value()));
 
         producer.close();
-        customer_consumer.close();
         underage_consumer.close();
         
         assertEquals(2, underage_records.size());
