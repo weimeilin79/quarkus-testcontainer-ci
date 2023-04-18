@@ -14,7 +14,7 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 public class TestResource implements QuarkusTestResourceLifecycleManager {
 
     private static DockerImageName REDPANDA_IMAGE = DockerImageName
-            .parse("docker.redpanda.com/vectorized/redpanda:latest");
+            .parse("docker.redpanda.com/redpandadata/redpanda:latest");
 
     @Container
     private static final RedpandaContainer redpanda = new RedpandaContainer(REDPANDA_IMAGE) {
