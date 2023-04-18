@@ -68,7 +68,7 @@ public class TestAgeRestriction {
 
         producer.close();
         underage_consumer.close();
-å
+
         assertEquals(2, underage_records.size());
 
     }

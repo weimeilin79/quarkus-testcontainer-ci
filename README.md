@@ -65,7 +65,7 @@ And we will be expecting to see 2 underage customers in the underage topic
 
 To set up Redpanda as your in your test folder, create a new class that implements `QuarkusTestResourceLifecycleManager` and create a Testcontainer that will load the Redpanda broker. 
 
-By default, Redpand will allocate a fixed amount of CPU core and memory, which is ideal for production but for development and CI environment with limited hardware capacity, we will need to assign 1 core CPU adding `overprovisioning` indicator to accommodate container resource limitations.
+By default, Redpanda will allocate a fixed amount of CPU core and memory, which is ideal for production but for development and CI environment with limited hardware capacity, we will need to assign 1 core CPU adding `overprovisioning` indicator to accommodate container resource limitations.
 
 ```
     private static DockerImageName REDPANDA_IMAGE = DockerImageName
