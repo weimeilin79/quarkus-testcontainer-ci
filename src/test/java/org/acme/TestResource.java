@@ -12,7 +12,7 @@ import org.testcontainers.images.builder.Transferable;
 public class TestResource implements QuarkusTestResourceLifecycleManager {
 
     static final RedpandaContainer redpanda = new RedpandaContainer("docker.redpanda.com/vectorized/redpanda:latest"){
-        protected void containerIsStarting(InspectContainerResponse containerInfo) {
+    protected void containerIsStarting(InspectContainerResponse containerInfo) {
             String command = "#!/bin/bash\n";
             command = command + "/usr/bin/rpk redpanda start --mode dev-container --overprovisioned --smp=1 --memory=2G ";
             command = command + "--kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092 ";
@@ -26,9 +26,6 @@ public class TestResource implements QuarkusTestResourceLifecycleManager {
 
 
     
-    
-    //static final  KafkaContainer redpanda =  new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.0.1"));
-
     @Override
     public Map<String, String> start() {
         redpanda.start();

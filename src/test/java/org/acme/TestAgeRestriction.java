@@ -34,14 +34,14 @@ import io.quarkus.kafka.client.serialization.ObjectMapperSerializer;
 import io.quarkus.kafka.client.serialization.ObjectMapperDeserializer;
 
 
-import java.util.stream.IntStream;
+
 
 @QuarkusTest
 @QuarkusTestResource(TestResource.class)
 public class TestAgeRestriction {
 
     private static final Logger logger = Logger.getLogger(AgeRestrict.class);
-    private static final int MAX_FETCH_IF_ZERO = 3;
+    private static final int MAX_FETCH_IF_ZERO = 5;
 
 
     
@@ -54,15 +54,9 @@ public class TestAgeRestriction {
         logger.info("Sending customer records");
         
        
-        IntStream.range(0, 3).forEach(
-            i -> {
-                try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
-                logger.info(".");
-   
-            }
-        );     
-        
-        
+        //Putting this thread to sleep to allow consumer thread to catch up. 
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+             
         producer.send(new ProducerRecord<>("customers", 101, new Customer(101, "Abby", 17)));
         producer.send(new ProducerRecord<>("customers", 102, new Customer(202, "Brooke", 42)));
         producer.send(new ProducerRecord<>("customers", 103, new Customer(303, "Crystal", 31)));
@@ -85,7 +79,7 @@ public class TestAgeRestriction {
 
         Consumer<Integer, Customer> underage_consumer = createConsumer("underage");
         logger.info("Consuming underage  customer records.....");
-        List<ConsumerRecord<Integer, Customer>> underage_records = poll(underage_consumer, 1);
+        List<ConsumerRecord<Integer, Customer>> underage_records = poll(underage_consumer, 2);
 
         logger.info("Underage consumed records:"+underage_records.size());
         underage_records.forEach((record) -> logger.info("--->"+record.value()));
@@ -126,18 +120,17 @@ public class TestAgeRestriction {
     }
 
 
-    private List<ConsumerRecord<Integer, Customer>> poll(Consumer<Integer, Customer> consumer,
-            int expectedRecordCount) {
+    private List<ConsumerRecord<Integer, Customer>> poll(Consumer<Integer, Customer> consumer, int expectedRecordCount) {
         int fetched = 0;
-        List<ConsumerRecord<Integer, Customer>> result = new ArrayList<>();
         int retry=0;
+        List<ConsumerRecord<Integer, Customer>> result = new ArrayList<>();
         while (fetched < expectedRecordCount) {
-            ConsumerRecords<Integer, Customer> records = consumer.poll(Duration.ofMillis(10000));
+            ConsumerRecords<Integer, Customer> records = consumer.poll(Duration.ofMillis(1000));
             records.forEach(result::add);
             fetched = result.size();
-            if(fetched ==0 && retry < MAX_FETCH_IF_ZERO){
+            if( retry < MAX_FETCH_IF_ZERO){
                 retry++;
-                logger.info("Retry fetch after 0: "+retry);
+                logger.info("Retry fetch:["+fetched+"] expected record:["+expectedRecordCount+"]: retry:["+retry+"]");
             }else 
                 break;
         }
